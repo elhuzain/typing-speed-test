@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Sora } from "next/font/google";
 import "./globals.css";
+import { cn } from "@/lib/utils";
 
 const sora = Sora({
   variable: "--font-sora",
@@ -15,7 +16,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    <html lang="en" className={`${sora.variable} h-full antialiased`}>
+    <html lang="en" className={cn("h-full", "antialiased", sora.variable)}>
       <body className="min-h-full flex flex-col bg-background text-foreground">
         {children}
       </body>
