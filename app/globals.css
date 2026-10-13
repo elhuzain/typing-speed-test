@@ -81,3 +81,35 @@
     font-weight: 700;
   }
 }
+
+.text-preset-1 {
+  @apply text-[32px] md:text-[40px] tracking-[136%] leading-[0.4px];
+}
+
+.text-preset-1-bold {
+  @apply text-2xl md:text-[40px] tracking-[120%] md:tracking-[136%] leading-[0.32px] md:leading-[0.4px] font-bold;
+}
+
+.text-preset-2 {
+  @apply font-bold text-2xl leading-0;
+}
+
+.text-preset-3 {
+  @apply text-base md:text-xl tracking-[120%] leading-[-0.48px] md:leading-[-0.6px];
+}
+
+.text-preset-3-semibold {
+  @apply text-xl tracking-[120%] leading-[-0.3px] font-semibold;
+}
+
+.text-preset-4 {
+  @apply text-lg tracking-[120%] leading-[-0.6px];
+}
+
+.text-preset-5 {
+  @apply text-base tracking-[120%] leading-[-0.48px];
+}
+
+.text-preset-6 {
+  @apply text-xs tracking-[120%] leading-0;
+}
