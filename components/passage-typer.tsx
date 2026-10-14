@@ -1,15 +1,62 @@
+"use client";
+
+import { cn } from "@/lib/lib";
+import { useTypingTest } from "../providers/typing-test-provider";
 import { Button } from "./ui/button";
 
 const PassageTyper = () => {
-    return <div className="py-8 relative pb-16 border-b border-neutral-800">
-        <p className="text-preset-1 text-neutral-400 px-2">
-            The archaeological expedition unearthed artifacts that complicated prevailing theories about Bronze Age trade networks. Obsidian from Anatolia, lapis lazuli from Afghanistan, and amber from the Baltic—all discovered in a single Mycenaean tomb—suggested commercial connections far more extensive than previously hypothesized. \"We've underestimated ancient peoples' navigational capabilities and their appetite for luxury goods,\" the lead researcher observed. \"Globalization isn't as modern as we assume.
-        </p>
-        <div className="absolute flex flex-col gap-4 items-center justify-center top-0 w-full h-full backdrop-blur-sm">
-            <Button>Start Typing Test</Button>
-            <p className="text-white text-preset-3-semibold">Or click the text and start typing</p>
+  const {
+    passage,
+    typedCharacters,
+    hasStarted,
+    inputRef,
+    startTyping,
+    handleKeyDown,
+  } = useTypingTest();
+
+  return (
+    <div
+      className="relative border-b border-neutral-800 py-8 pb-16"
+      onClick={startTyping}
+    >
+      <input
+        ref={inputRef}
+        aria-label="Type the displayed passage"
+        className="absolute h-px w-px opacity-0"
+        onKeyDown={handleKeyDown}
+        type="text"
+      />
+
+      <p className="px-2 text-preset-1 text-neutral-400">
+        {Array.from(passage).map((character, index) => {
+          const typedCharacter = typedCharacters[index];
+          const isCurrent = hasStarted && index === typedCharacters.length;
+
+          return (
+            <span
+              key={index}
+              className={cn(
+                typedCharacter !== undefined &&
+                  (typedCharacter === character ? "text-green-500" : "text-red-500 underline underline-offset-10"),
+                isCurrent && "shadow-[inset_2px_0_0_var(--blue-400)] bg-neutral-400/20",
+              )}
+            >
+              {character}
+            </span>
+          );
+        })}
+      </p>
+
+      {!hasStarted && (
+        <div className="absolute inset-0 flex flex-col items-center justify-center gap-4 backdrop-blur-sm">
+          <Button onClick={startTyping}>Start Typing Test</Button>
+          <p className="text-preset-3-semibold text-white">
+            Or click the text and start typing
+          </p>
         </div>
+      )}
     </div>
-}
+  );
+};
 
 export default PassageTyper;
