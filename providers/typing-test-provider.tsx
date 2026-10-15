@@ -66,22 +66,26 @@ export function TypingTestProvider({
   const [difficulty, setDifficultyState] = useState<Difficulty>("hard");
   const [mode, setModeState] = useState<GameMode>("timed");
   const [time, setTime] = useState(60);
+  const [correctCharacters, setCorrectCharacters] = useState(0);
+  const [incorrectCharacters, setIncorrectCharacters] = useState(0);
   const inputRef = useRef<HTMLInputElement>(null);
   const typedCharactersRef = useRef<string[]>([]);
+  const correctCharactersRef = useRef(0);
+  const incorrectCharactersRef = useRef(0);
   const timeRef = useRef(60);
   const hasFinishedRef = useRef(false);
-  const correctCharacters = typedCharacters.reduce(
+  const activeCorrectCharacters = typedCharacters.reduce(
     (total, character, index) => total + Number(character === passage[index]),
     0,
   );
-  const incorrectCharacters = typedCharacters.length - correctCharacters;
+  const attemptedCharacters = correctCharacters + incorrectCharacters;
   const elapsedSeconds = mode === "timed" ? 60 - time : time;
-  const accuracy = typedCharacters.length === 0
+  const accuracy = attemptedCharacters === 0
     ? 100
-    : Math.round((correctCharacters / typedCharacters.length) * 100);
+    : Math.round((correctCharacters / attemptedCharacters) * 100);
   const wpm = elapsedSeconds === 0
     ? 0
-    : Math.round((correctCharacters / 5) / (elapsedSeconds / 60));
+    : Math.round((activeCorrectCharacters / 5) / (elapsedSeconds / 60));
 
   useEffect(() => {
     const timeout = window.setTimeout(() => {
@@ -131,6 +135,10 @@ export function TypingTestProvider({
     setHasStarted(false);
     setTypedCharacters([]);
     typedCharactersRef.current = [];
+    setCorrectCharacters(0);
+    correctCharactersRef.current = 0;
+    setIncorrectCharacters(0);
+    incorrectCharactersRef.current = 0;
     setPassage(getRandomPassage(difficulty));
     setTime(mode === "timed" ? 60 : 0);
     timeRef.current = mode === "timed" ? 60 : 0;
@@ -171,6 +179,10 @@ export function TypingTestProvider({
     setPassage(getRandomPassage(nextDifficulty));
     typedCharactersRef.current = [];
     setTypedCharacters([]);
+    correctCharactersRef.current = 0;
+    setCorrectCharacters(0);
+    incorrectCharactersRef.current = 0;
+    setIncorrectCharacters(0);
   };
 
   const startTyping = () => {
@@ -193,6 +205,17 @@ export function TypingTestProvider({
 
     event.preventDefault();
     if (typedCharactersRef.current.length >= passage.length) return;
+
+    const characterIndex = typedCharactersRef.current.length;
+    const isCorrect = event.key === passage[characterIndex];
+
+    if (isCorrect) {
+      correctCharactersRef.current += 1;
+      setCorrectCharacters(correctCharactersRef.current);
+    } else {
+      incorrectCharactersRef.current += 1;
+      setIncorrectCharacters(incorrectCharactersRef.current);
+    }
 
     const nextCharacters = [...typedCharactersRef.current, event.key];
     typedCharactersRef.current = nextCharacters;
