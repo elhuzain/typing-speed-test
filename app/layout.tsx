@@ -44,7 +44,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         <Suspense fallback={<div className="fixed w-full h-full inset-0 flex items-center justify-center"><Loader2 className="animate-spin text-white" /></div>}>
           <AppProvider>{children}</AppProvider>
         </Suspense>
-        <footer className="text-center w-full text-white pb-2 pt-4">
+        <footer className="text-xs mt-auto text-center w-full text-white pb-2 pt-4">
           Challenge by <a className="text-yellow-400 underline underline-offset-4" href="https://www.frontendmentor.io?ref=challenge">Frontend Mentor</a>.
           Coded by <a href="https://elhuzain.com" className="text-yellow-400 underline underline-offset-4">elhuzain</a>.
         </footer>

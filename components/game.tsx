@@ -45,7 +45,7 @@ export default function Game() {
   return (
     <div className="flex flex-1 flex-col items-center justify-center font-sans">
       <main ref={containerRef} className="flex w-full px-4 max-w-310 flex-col items-center justify-between sm:items-start">
-        <div className="flex w-full items-center justify-between border-b border-neutral-800 pb-4">
+        <div className="flex flex-col md:flex-row w-full gap-4 md:items-center justify-between border-b border-neutral-800 pb-4">
           <div data-animate="indicators">
             <Indicators />
           </div>
