@@ -100,7 +100,7 @@ export default function GameCompleted() {
       >
         {title}
       </h1>
-      <p data-animate="message" className="test-preset-3 mb-13 text-neutral-400">{message}</p>
+      <p data-animate="message" className="text-preset-3 mb-13 text-neutral-400">{message}</p>
       <dl className="mb-16 flex flex-col sm:flex-row items-center gap-5">
         <div data-animate="stat" className="py-3 px-6 space-y-4 border border-neutral-700 rounded-lg min-w-40 w-full">
           <dt className="text-preset-3 text-neutral-400">WPM:</dt>
