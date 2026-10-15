@@ -13,6 +13,8 @@ import {
 } from "react";
 import passages from "@/lib/data.json";
 
+const PERSONAL_BEST_KEY = "personal_best";
+
 export type GameMode = "timed" | "passage";
 export type Difficulty = keyof typeof passages;
 
@@ -27,6 +29,9 @@ type TypingTestContextValue = {
   typedCharacters: string[];
   hasStarted: boolean;
   isFinished: boolean;
+  isFirstGame: boolean;
+  isNewPersonalBest: boolean;
+  personalBest: number | null;
   difficulty: Difficulty;
   mode: GameMode;
   time: number;
@@ -55,6 +60,9 @@ export function TypingTestProvider({
   const [typedCharacters, setTypedCharacters] = useState<string[]>([]);
   const [hasStarted, setHasStarted] = useState(false);
   const [isFinished, setIsFinished] = useState(false);
+  const [isFirstGame, setIsFirstGame] = useState(false);
+  const [isNewPersonalBest, setIsNewPersonalBest] = useState(false);
+  const [personalBest, setPersonalBest] = useState<number | null>(null);
   const [difficulty, setDifficultyState] = useState<Difficulty>("hard");
   const [mode, setModeState] = useState<GameMode>("timed");
   const [time, setTime] = useState(60);
@@ -75,16 +83,50 @@ export function TypingTestProvider({
     ? 0
     : Math.round((correctCharacters / 5) / (elapsedSeconds / 60));
 
+  useEffect(() => {
+    const timeout = window.setTimeout(() => {
+      const storedValue = window.localStorage.getItem(PERSONAL_BEST_KEY);
+      if (storedValue === null) return;
+
+      const storedPersonalBest = Number(storedValue);
+      if (Number.isFinite(storedPersonalBest) && storedPersonalBest >= 0) {
+        setPersonalBest(storedPersonalBest);
+      }
+    }, 0);
+
+    return () => window.clearTimeout(timeout);
+  }, []);
+
   const finishGame = useCallback(() => {
     if (hasFinishedRef.current) return;
 
+    const finalCorrectCharacters = typedCharactersRef.current.reduce(
+      (total, character, index) => total + Number(character === passage[index]),
+      0,
+    );
+    const finalElapsedSeconds = mode === "timed" ? 60 - timeRef.current : timeRef.current;
+    const finalWpm = finalElapsedSeconds === 0
+      ? 0
+      : Math.round((finalCorrectCharacters / 5) / (finalElapsedSeconds / 60));
+    const establishingBaseline = personalBest === null;
+    const setNewRecord = personalBest !== null && finalWpm > personalBest;
+
+    if (establishingBaseline || setNewRecord) {
+      window.localStorage.setItem(PERSONAL_BEST_KEY, String(finalWpm));
+      setPersonalBest(finalWpm);
+    }
+
     hasFinishedRef.current = true;
+    setIsFirstGame(establishingBaseline);
+    setIsNewPersonalBest(setNewRecord);
     setHasStarted(false);
     setIsFinished(true);
-  }, []);
+  }, [mode, passage, personalBest]);
 
   const restartGame = useCallback(() => {
     hasFinishedRef.current = false;
+    setIsFirstGame(false);
+    setIsNewPersonalBest(false);
     setIsFinished(false);
     setHasStarted(false);
     setTypedCharacters([]);
@@ -168,6 +210,9 @@ export function TypingTestProvider({
         typedCharacters,
         hasStarted,
         isFinished,
+        isFirstGame,
+        isNewPersonalBest,
+        personalBest,
         difficulty,
         mode,
         time,
