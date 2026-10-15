@@ -31,9 +31,7 @@ export default function Game() {
         duration: 0.5,
       }, "<0.08")
       .from("[data-animate='passage']", {
-        // autoAlpha: 0,
         scale: 0.985,
-        // y: 32,
         duration: 0.65,
       }, "-=0.2")
       .from("[data-animate='restart']", {
