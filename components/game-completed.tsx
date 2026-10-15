@@ -14,6 +14,7 @@ gsap.registerPlugin(useGSAP);
 
 export default function GameCompleted() {
   const containerRef = useRef<HTMLElement>(null);
+  const headingRef = useRef<HTMLHeadingElement>(null);
   const {
     restartGame,
     wpm,
@@ -36,6 +37,8 @@ export default function GameCompleted() {
       : "Solid run. Keep pushing to beat your high score.";
 
   useGSAP(() => {
+    headingRef.current?.focus();
+
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
     const timeline = gsap.timeline({ defaults: { ease: "power3.out" } });
@@ -89,7 +92,14 @@ export default function GameCompleted() {
         src={isNewPersonalBest ? "/images/icon-new-pb.svg" : "/images/icon-completed.svg"}
         className={cn("mb-16 rounded-full", !isNewPersonalBest && "completion-checkmark")}
       />
-      <h1 data-animate="title" className="mb-2 text-preset-1 font-bold">{title}</h1>
+      <h1
+        ref={headingRef}
+        tabIndex={-1}
+        data-animate="title"
+        className="mb-2 text-preset-1 font-bold"
+      >
+        {title}
+      </h1>
       <p data-animate="message" className="test-preset-3 mb-13 text-neutral-400">{message}</p>
       <dl className="mb-16 flex flex-col sm:flex-row items-center gap-5">
         <div data-animate="stat" className="py-3 px-6 space-y-4 border border-neutral-700 rounded-lg min-w-40 w-full">
@@ -103,9 +113,14 @@ export default function GameCompleted() {
         <div data-animate="stat" className="py-3 px-6 space-y-4 border border-neutral-700 rounded-lg min-w-40 w-full">
           <dt className="text-preset-3 text-neutral-400">Characters:</dt>
           <dd className="text-preset-2 font-bold text-neutral-500">
-            <span className="text-green-500">{correctCharacters}</span>
-            {"/"}
-            <span className="text-red-500">{incorrectCharacters}</span>
+            <span className="sr-only">
+              {correctCharacters} correct, {incorrectCharacters} incorrect
+            </span>
+            <span aria-hidden="true">
+              <span className="text-green-500">{correctCharacters}</span>
+              {"/"}
+              <span className="text-red-500">{incorrectCharacters}</span>
+            </span>
           </dd>
         </div>
       </dl>

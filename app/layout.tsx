@@ -41,7 +41,16 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html lang="en" className={cn("h-full", "antialiased", sora.variable)}>
       <body className="min-h-full flex flex-col bg-neutral-900 text-foreground">
-        <Suspense fallback={<div className="fixed w-full h-full inset-0 flex items-center justify-center"><Loader2 className="animate-spin text-white" /></div>}>
+        <Suspense fallback={
+          <div
+            role="status"
+            aria-live="polite"
+            className="fixed inset-0 flex h-full w-full items-center justify-center"
+          >
+            <Loader2 aria-hidden="true" className="animate-spin text-white" />
+            <span className="sr-only">Loading typing test</span>
+          </div>
+        }>
           <AppProvider>{children}</AppProvider>
         </Suspense>
         <footer className="text-xs mt-auto text-center w-full text-white pb-2 pt-4">

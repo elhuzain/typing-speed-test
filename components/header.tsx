@@ -8,7 +8,7 @@ const Header = () => {
 
     return <header>
         <div className="max-w-310 py-8 px-4 mx-auto w-full flex items-center justify-between">
-            <Image src="/images/logo-large.svg" width="267" height="40" alt="Logo" />
+            <Image src="/images/logo-large.svg" width="267" height="40" alt="Typing Speed Test" />
             {personalBest !== null && (
                 <p className="flex items-center gap-2">
                     <Image alt="" src="/images/icon-personal-best.svg" width="21" height="18" />
