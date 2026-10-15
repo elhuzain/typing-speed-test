@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Sora } from "next/font/google";
 import "./globals.css";
 import { cn } from "@/lib/utils";
+import Header from "@/components/header";
 
 const sora = Sora({
   variable: "--font-sora",
@@ -18,6 +19,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html lang="en" className={cn("h-full", "antialiased", sora.variable)}>
       <body className="min-h-full flex flex-col text-foreground">
+        <Header />
         {children}
       </body>
     </html>
