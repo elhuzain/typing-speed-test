@@ -13,12 +13,12 @@ const Indicators = () => {
 
         <div className="flex items-center gap-2 pe-8 me-8 border-e border-neutral-700">
             <dt className="text-preset-3 text-neutral-400">Accuracy:</dt>
-            <dd className="text-preset-2">{accuracy}%</dd>
+            <dd className="text-preset-2 text-red-500">{accuracy}%</dd>
         </div>
 
         <div className="flex items-center gap-2">
             <dt className="text-preset-3 text-neutral-400">Time:</dt>
-            <dd className="text-preset-2">{time}</dd>
+            <dd className="text-preset-2 text-yellow-400">{time}</dd>
         </div>
     </dl>
 }

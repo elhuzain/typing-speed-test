@@ -9,7 +9,7 @@ const buttonVariants = cva(
       variant: {
         default: "bg-blue-600 text-white! text-preset-3-semibold hover:bg-blue-400",
         secondary:
-          "bg-secondary text-secondary-foreground text-preset-3-semibold  hover:bg-[color-mix(in_oklch,var(--secondary),var(--foreground)_5%)] aria-expanded:bg-secondary aria-expanded:text-secondary-foreground",
+          "bg-secondary text-neutral-900! text-secondary-foreground text-preset-3-semibold  hover:bg-[color-mix(in_oklch,var(--secondary),var(--foreground)_5%)] aria-expanded:bg-secondary aria-expanded:text-secondary-foreground",
       },
       size: {
         default:

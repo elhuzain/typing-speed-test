@@ -10,9 +10,9 @@
   --neutral-0: hsl(0, 0%, 100%);
   --blue-600: hsl(214, 100%, 55%);
   --blue-400: hsl(210, 100%, 65%);
-  --red-500: hsl(354, 63%, 57%);
-  --green-500: hsl(140, 63%, 57%);
-  --yellow-400: hsl(49, 85%, 70%);
+  --red-500: #D64D5B;
+  --green-500: #4DD67B;
+  --yellow-400: #F4DC73;
   --muted: oklch(0.97 0 0);
   --border: oklch(0.922 0 0);
   --accent: oklch(0.97 0 0);
@@ -69,7 +69,6 @@
   body {
     margin: 0;
     min-height: 100vh;
-    background: var(--background);
     color: var(--foreground);
     font-family: "Sora", "Segoe UI", sans-serif;
     line-height: 1.5;
@@ -188,4 +187,13 @@
   --radius-2xl: calc(var(--radius) * 1.8);
   --radius-3xl: calc(var(--radius) * 2.2);
   --radius-4xl: calc(var(--radius) * 2.6);
+
+  --color-red-500: var(--red-500);
+  --color-green-500: var(--green-500);
+  --color-yellow-400: var(--yellow-400);
+}
+
+.completion-checkmark {
+  box-shadow: 0px 0px 0px 16px #4DD67B33,
+    0px 0px 0px 32px #4DD67B1A;
 }

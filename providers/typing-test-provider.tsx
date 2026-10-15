@@ -11,21 +11,29 @@ import {
   type ReactNode,
   type RefObject,
 } from "react";
-import { useRouter } from "next/navigation";
 import passages from "@/lib/data.json";
 
 export type GameMode = "timed" | "passage";
 export type Difficulty = keyof typeof passages;
 
+function getRandomPassage(difficulty: Difficulty) {
+  const availablePassages = passages[difficulty];
+  const randomIndex = Math.floor(Math.random() * availablePassages.length);
+  return availablePassages[randomIndex].text;
+}
+
 type TypingTestContextValue = {
   passage: string;
   typedCharacters: string[];
   hasStarted: boolean;
+  isFinished: boolean;
   difficulty: Difficulty;
   mode: GameMode;
   time: number;
   accuracy: number;
   wpm: number;
+  correctCharacters: number;
+  incorrectCharacters: number;
   inputRef: RefObject<HTMLInputElement | null>;
   setDifficulty: (difficulty: Difficulty) => void;
   setMode: (mode: GameMode) => void;
@@ -43,10 +51,10 @@ export function TypingTestProvider({
   children: ReactNode;
   initialPassage: string;
 }) {
-  const router = useRouter();
   const [passage, setPassage] = useState(initialPassage);
   const [typedCharacters, setTypedCharacters] = useState<string[]>([]);
   const [hasStarted, setHasStarted] = useState(false);
+  const [isFinished, setIsFinished] = useState(false);
   const [difficulty, setDifficultyState] = useState<Difficulty>("hard");
   const [mode, setModeState] = useState<GameMode>("timed");
   const [time, setTime] = useState(60);
@@ -58,6 +66,7 @@ export function TypingTestProvider({
     (total, character, index) => total + Number(character === passage[index]),
     0,
   );
+  const incorrectCharacters = typedCharacters.length - correctCharacters;
   const elapsedSeconds = mode === "timed" ? 60 - time : time;
   const accuracy = typedCharacters.length === 0
     ? 100
@@ -70,18 +79,20 @@ export function TypingTestProvider({
     if (hasFinishedRef.current) return;
 
     hasFinishedRef.current = true;
-    router.push("/finished");
-  }, [router]);
+    setHasStarted(false);
+    setIsFinished(true);
+  }, []);
 
   const restartGame = useCallback(() => {
     hasFinishedRef.current = false;
+    setIsFinished(false);
     setHasStarted(false);
     setTypedCharacters([]);
     typedCharactersRef.current = [];
+    setPassage(getRandomPassage(difficulty));
     setTime(mode === "timed" ? 60 : 0);
     timeRef.current = mode === "timed" ? 60 : 0;
-    inputRef.current?.focus();
-  }, [mode]);
+  }, [difficulty, mode]);
 
   useEffect(() => {
     if (!hasStarted) return;
@@ -114,11 +125,8 @@ export function TypingTestProvider({
   const setDifficulty = (nextDifficulty: Difficulty) => {
     if (hasStarted) return;
 
-    const availablePassages = passages[nextDifficulty];
-    const randomIndex = Math.floor(Math.random() * availablePassages.length);
-
     setDifficultyState(nextDifficulty);
-    setPassage(availablePassages[randomIndex].text);
+    setPassage(getRandomPassage(nextDifficulty));
     typedCharactersRef.current = [];
     setTypedCharacters([]);
   };
@@ -159,11 +167,14 @@ export function TypingTestProvider({
         passage,
         typedCharacters,
         hasStarted,
+        isFinished,
         difficulty,
         mode,
         time,
         accuracy,
         wpm,
+        correctCharacters,
+        incorrectCharacters,
         inputRef,
         setDifficulty,
         setMode,

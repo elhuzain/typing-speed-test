@@ -27,7 +27,7 @@ const PassageTyper = () => {
         type="text"
       />
 
-      <p className="px-2 text-preset-1 text-neutral-400">
+      <p className="px-3 text-preset-1 text-neutral-400">
         {Array.from(passage).map((character, index) => {
           const typedCharacter = typedCharacters[index];
           const isCurrent = hasStarted && index === typedCharacters.length;
